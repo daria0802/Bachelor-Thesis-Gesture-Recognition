@@ -1,0 +1,384 @@
+%==============================================================================
+% Tento soubor použijte jako základ
+% This file should be used as a base for the thesis
+% Autoři / Authors: 2008 Michal Bidlo, 2022 Jaroslav Dytrych, 2025 Petr Veigend
+% Kontakt pro dotazy a připomínky: sablona@fit.vutbr.cz
+% Contact for questions and comments: sablona@fit.vutbr.cz
+%==============================================================================
+% kódování: UTF-8 (zmena prikazem iconv, recode nebo cstocs)
+% encoding: UTF-8 (you can change it by command iconv, recode or cstocs)
+%------------------------------------------------------------------------------
+% zpracování / processing: make, make pdf, make clean
+%==============================================================================
+% Soubory, které je nutné upravit nebo smazat: / Files which have to be edited or deleted:
+%   projekt-20-literatura-bibliography.bib - literatura / bibliography
+%   projekt-01-kapitoly-chapters.tex - obsah práce / the thesis content
+%   projekt-01-kapitoly-chapters-en.tex - obsah práce v angličtině / the thesis content in English
+%   projekt-30-prilohy-appendices.tex - přílohy / appendices
+%   projekt-30-prilohy-appendices-en.tex - přílohy v angličtině / appendices in English
+%==============================================================================
+%\documentclass[]{fitthesis} % bez zadání - pro začátek práce, aby nebyl problém s překladem
+% \documentclass[english]{fitthesis} % without assignment - for the work start to avoid compilation problem
+%\documentclass[zadani]{fitthesis} % odevzdani do IS VUT a/nebo tisk s barevnými odkazy - odkazy jsou barevné
+% \documentclass[english,zadani]{fitthesis} % for submission to the IS VUT and/or print with color links - links are color
+%\documentclass[zadani,print]{fitthesis} % pro černobílý tisk - odkazy jsou černé
+%\documentclass[english,zadani,print]{fitthesis} % for the black and white print - links are black
+%\documentclass[zadani,cprint]{fitthesis} % pro barevný tisk - odkazy jsou černé, znak VUT barevný
+\documentclass[english,zadani,cprint]{fitthesis} % for the print - links are black, logo is color
+% * Je-li práce psaná v anglickém jazyce, je zapotřebí u třídy použít 
+%   parametr english následovně:
+%   If thesis is written in English, it is necessary to use 
+%   parameter english as follows:
+%      \documentclass[english]{fitthesis}
+% * Je-li práce psaná ve slovenském jazyce, je zapotřebí u třídy použít 
+%   parametr slovak následovně:
+%   If the work is written in the Slovak language, it is necessary 
+%   to use parameter slovak as follows:
+%      \documentclass[slovak]{fitthesis}
+% * Je-li práce psaná v anglickém jazyce se slovenským abstraktem apod., 
+%   je zapotřebí u třídy použít parametry english a enslovak následovně:
+%   If the work is written in English with the Slovak abstract, etc., 
+%   it is necessary to use parameters english and enslovak as follows:
+%      \documentclass[english,enslovak]{fitthesis}
+
+% Základní balíčky jsou dole v souboru šablony fitthesis.cls
+% Basic packages are at the bottom of template file fitthesis.cls
+% zde můžeme vložit vlastní balíčky / you can place own packages here
+
+
+% Pro seznam zkratek lze využít balíček Glossaries - nutno odkomentovat i níže a při kompilaci z konzoly i v Makefile (plnou verzi pro Perl, nebo lite)
+% The Glossaries package can be used for the list of abbreviations - it is necessary to uncomment also below. When compiling from the console also in the Makefile (full version for Perl or lite)
+%\usepackage{glossaries}
+%\usepackage{glossary-superragged}
+%\makeglossaries 
+
+% Nastavení cesty k obrázkům
+% Setting of a path to the pictures
+%\graphicspath{{obrazky-figures/}{./obrazky-figures/}}
+%\graphicspath{{obrazky-figures/}{../obrazky-figures/}}
+
+%---rm---------------
+\renewcommand{\rmdefault}{lmr}%zavede Latin Modern Roman jako rm / set Latin Modern Roman as rm
+%---sf---------------
+\renewcommand{\sfdefault}{qhv}%zavede TeX Gyre Heros jako sf
+%---tt------------
+\renewcommand{\ttdefault}{lmtt}% zavede Latin Modern tt jako tt
+
+% vypne funkci šablony, která automaticky nahrazuje uvozovky,
+% aby nebyly prováděny nevhodné náhrady v popisech API apod.
+% disables function of the template which replaces quotation marks
+% to avoid unnecessary replacements in the API descriptions etc.
+\csdoublequotesoff
+
+\usepackage{url}
+
+% =======================================================================
+% balíček "hyperref" vytváří klikací odkazy v pdf, pokud tedy použijeme pdflatex
+% problém je, že balíček hyperref musí být uveden jako poslední, takže nemůže
+% být v šabloně
+% "hyperref" package create clickable links in pdf if you are using pdflatex.
+% Problem is that this package have to be introduced as the last one so it 
+% can not be placed in the template file.
+\ifWis
+\ifx\pdfoutput\undefined % nejedeme pod pdflatexem / we are not using pdflatex
+\else
+  \usepackage{color}
+  \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
+  \definecolor{hrcolor-ref}{RGB}{223,52,30}
+  \definecolor{hrcolor-cite}{HTML}{2F8F00}
+  \definecolor{hrcolor-urls}{HTML}{092EAB}
+  \hypersetup{
+	linkcolor=hrcolor-ref,
+	citecolor=hrcolor-cite,
+	filecolor=magenta,
+	urlcolor=hrcolor-urls
+  }
+  \def\pdfBorderAttrs{/Border [0 0 0] }  % bez okrajů kolem odkazů / without margins around links
+  \pdfcompresslevel=9
+\fi
+\else % pro tisk budou odkazy, na které se dá klikat, černé / for the print clickable links will be black
+\ifx\pdfoutput\undefined % nejedeme pod pdflatexem / we are not using pdflatex
+\else
+  \usepackage{color}
+  \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex,urlcolor=black,linkcolor=black,citecolor=black]{hyperref}
+  \definecolor{links}{rgb}{0,0,0}
+  \definecolor{anchors}{rgb}{0,0,0}
+  \def\AnchorColor{anchors}
+  \def\LinkColor{links}
+  \def\pdfBorderAttrs{/Border [0 0 0] } % bez okrajů kolem odkazů / without margins around links
+  \pdfcompresslevel=9
+\fi
+\fi
+% Řešení problému, kdy klikací odkazy na obrázky vedou za obrázek
+% This solves the problems with links which leads after the picture
+\usepackage[all]{hypcap}
+
+
+% Informace o práci/projektu / Information about the thesis
+%---------------------------------------------------------------------------
+\projectinfo{
+  %Prace / Thesis
+  project={BP},            %typ práce BP/SP/DP/DR  / thesis type (SP = term project)
+  year={2026},             % rok odevzdání / year of submission
+  date=\today,             % datum odevzdání / submission date
+  %Nazev prace / thesis title
+  title.cs={Implementace výstupů strojového učení na vestavných platformách},  % název práce v češtině či slovenštině (dle zadání) / thesis title in czech language (according to assignment)
+  title.en={Implementation of Machine Learning Outputs on Embedded Platforms}, % název práce v angličtině / thesis title in english
+  title.length={13.5cm}, % nastavení délky bloku s titulkem pro úpravu zalomení řádku (lze definovat zde nebo níže) / setting the length of a block with a thesis title for adjusting a line break (can be defined here or below)
+  %sectitle.length={14.5cm}, % nastavení délky bloku s druhým titulkem pro úpravu zalomení řádku (lze definovat zde nebo níže) / setting the length of a block with a second thesis title for adjusting a line break (can be defined here or below)
+  %dectitle.length={14.5cm}, % nastavení délky bloku s titulkem nad prohlášením pro úpravu zalomení řádku (lze definovat zde nebo níže) / setting the length of a block with a thesis title above declaration for adjusting a line break (can be defined here or below)
+  %Autor / Author
+  author.name={Daria},   % jméno autora / author name
+  author.surname={Kinash},   % příjmení autora / author surname 
+  %author.title.p={Bc.}, % titul před jménem (nepovinné) / title before the name (optional)
+  %author.title.a={Ph.D.}, % titul za jménem (nepovinné) / title after the name (optional)
+  %Ustav / Department
+  department={UPSY}, % doplňte příslušnou zkratku dle ústavu na zadání: UPSY/UIFS/UITS/UPGM / fill in appropriate abbreviation of the department according to assignment: UPSY/UIFS/UITS/UPGM
+  % Školitel / supervisor
+  supervisor.name={Josef},   % jméno školitele / supervisor name 
+  supervisor.surname={Strnadel},   % příjmení školitele / supervisor surname
+  supervisor.title.p={Ing.},   %titul před jménem (nepovinné) / title before the name (optional)
+  supervisor.title.a={Ph.D.},    %titul za jménem (nepovinné) / title after the name (optional)
+  % Školitel specialista / Supervisor specialist
+  % Vyplňuje se pouze u pojednání disertační práce nebo u disertační práce, pokud existuje školitel specialista. Pokud nemáte školitele specialistu, jméno a příjmení ponechte prázdné. / Is used only with PhD. thesis or proposal. if you have the specialist. If you do not have a specialist, leave name and surname blank.  
+  specialist.name={},   % jméno školitele specialisty / supervisor specialist name 
+  specialist.surname={},   % příjmení školitele specialisty / supervisor specialist surname
+  specialist.title.p={},   %titul před jménem (nepovinné) / title before the name (optional)
+  specialist.title.a={},    %titul za jménem (nepovinné) / title after the name (optional)
+  % Klíčová slova / keywords
+  keywords.cs={strojové učení, vestavěné systémy, mikrokontrolér, TinyML, TensorFlow Lite Micro, LiteRT, rozpoznávání gest, jednorozměrná konvoluční neuronová síť, kvantizace, NXP i.MX RT1050, inerciální měřicí jednotka}, % klíčová slova v českém či slovenském jazyce / keywords in czech or slovak language
+  keywords.en={machine learning, embedded systems, microcontroller, TinyML, TensorFlow Lite Micro, LiteRT, gesture recognition, 1D convolutional neural network, quantisation, NXP i.MX RT1050, inertial measurement unit}, % klíčová slova v anglickém jazyce / keywords in english
+  %keywords.en={Here, individual keywords separated by commas will be written in English.},
+  % Abstrakt / Abstract
+  abstract.cs={
+  Nasazení strojového učení na mikrokontrolérech umožňuje inferenci v reálném čase bez potřeby síťového připojení, ale vyžaduje pečlivá návrhová rozhodnutí. Tato práce představuje kompletní implementaci strojového učení pro rozpoznávání gest zápěstí v reálném čase na mikrokontroléru NXP~i.MX~RT1050. Kompaktní jednorozměrná konvoluční neuronová síť a pět klasických klasifikátorů byly natrénovány, kvantizovány a nasazeny na cílovém hardwaru a hodnoceny z hlediska přesnosti, latence inference a paměťových nároků. Základní CNN dosáhla přesnosti 94.3\,\% na vlastním datasetu se dvěma subjekty. Plná int8 kvantizace snížila spotřebu SRAM o 75\,\% při změně přesnosti pouze o $+0.4$ procentního bodu a průměrná doba inference na zařízení je 13\,199\,$\mu$s, což je méně než 2\,\% dostupného časového rozpočtu. Mezi klasickými modely dosáhl rozhodovací strom nejrychlejší inference (221\,$\mu$s) při využití méně než 10\,KB flash paměti. Studie hyperparametrů na benchmarku UCI Human Activity Recognition potvrdila správnost navrženého postupu a ukázala, že optimální nastavení se výrazně liší mezi velkými a malými datasety. Na datasetu gest se dvěma subjekty dosahuje logistická regrese stejné přesnosti jako nejlepší CNN, zatímco testování mezi subjekty dosáhlo pouze 34.7\,\% přesnosti, což ukazuje omezenou velikost trénovacích dat jako hlavní limit.}, % abstrakt v českém či slovenském jazyce / abstract in czech or slovak language
+  abstract.en={
+  Deploying machine learning on microcontrollers enables real-time inference without connectivity, but requires careful design choices. This thesis presents an end-to-end implementation of machine learning for real-time wrist gesture recognition on the NXP~i.MX~RT1050 microcontroller. A compact one-dimensional convolutional neural network and five classical classifiers were trained, quantized, deployed on the target hardware, and evaluated for accuracy, inference latency, and memory consumption. The baseline CNN achieved 94.3\,\% test accuracy on a custom two-subject dataset. Full int8 quantization reduced SRAM consumption by 75\,\% with an accuracy change of only $+0.4$ percentage points, and average on-board inference time is 13\,199\,$\mu$s, under 2\,\% of the available time budget. Among the classical models the decision tree achieved the fastest inference (221\,$\mu$s) with under 10\,KB of flash. A hyperparameter study on the UCI Human Activity Recognition benchmark validated the pipeline and showed that optimal settings differ between large and small datasets. On the two-subject gesture data, logistic regression matches the best CNN result, while cross-subject testing yielded only 34.7\,\% accuracy, identifying the small training corpus as the main limitation.},
+  % abstrakt v anglickém jazyce / abstract in english
+  %abstract.en={An abstract of the work in English will be written in this paragraph.},
+  % Prohlášení (u anglicky psané práce anglicky, u slovensky psané práce slovensky; u projektové praxe lze zakomentovat). Pokud použijete nástroje umělé inteligence, uveďte je podobně jako v příkladu. / Declaration (for thesis in english should be in english; for project practice can be commented out). If you use any AI tools, acknowledge them like in the provided example.
+  % declaration={Prohlašuji, že jsem tuto bakalářskou práci vypracovala samostatně pod vedením pana Ing.~Josefa Strnadela, Ph.D. Uvedla jsem všechny literární prameny, publikace a další zdroje, ze kterých jsem čerpala. Pro jazykovou revizi technické zprávy jsem použila nástroj ChatGPT, Claude.},
+  declaration={I hereby declare that this Bachelor's thesis was prepared as an original work by the author under the supervision of Ing.~Josef Strnadel, Ph.D. I have listed all the literary sources, publications and other sources, which were used during the preparation of this thesis. I have used ChatGPT and Claude to correct spelling and other language mistakes. },
+  % Poděkování (nepovinné, nejlépe v jazyce práce; nechcete-li, zakomentujte pro skrytí nadpisu. / Acknowledgement (optional, ideally in the language of the thesis; comment out to hide it including a heading.) 
+  acknowledgment={I would like to sincerely thank my supervisor, Ing.~Josef Strnadel, Ph.D., for his guidance, valuable advice and feedback throughout the writing of this thesis. His consultations and support were essential for both the technical part and the final form of the text.},
+  %acknowledgment={Here it is possible to express thanks to the supervisor and to the people which provided professional help
+%(external submitter, consultant, etc.).},
+  % Rozšířený abstrakt (cca 3 normostrany) - lze definovat zde nebo níže / Extended abstract (approximately 3 standard pages) - can be defined here or below
+  %extendedabstract={Do tohoto odstavce bude zapsán rozšířený výtah (abstrakt) práce v českém (slovenském) jazyce.},
+  %extabstract.odd={true}, % Začít rozšířený abstrakt na liché stránce? / Should extended abstract start on the odd page?
+  %faculty={FIT}, % FIT/FEKT/FSI/FA/FCH/FP/FAST/FAVU/USI/DEF
+  faculty.cs={Fakulta informačních technologií}, % Fakulta v češtině - pro využití této položky výše zvolte fakultu DEF / Faculty in Czech - for use of this entry select DEF above
+  faculty.en={Faculty of Information Technology}, % Fakulta v angličtině - pro využití této položky výše zvolte fakultu DEF / Faculty in English - for use of this entry select DEF above
+  department.cs={Ústav počítačových systémů}, % Ústav v češtině - pro využití této položky výše zvolte ústav DEF nebo jej zakomentujte / Department in Czech - for use of this entry select DEF above or comment it out
+  department.en={Department of Computer Systems} % Ústav v angličtině - pro využití této položky výše zvolte ústav DEF nebo jej zakomentujte / Department in English - for use of this entry select DEF above or comment it out
+}
+
+% Rozšířený abstrakt (cca 3 normostrany) - lze definovat zde nebo výše / Extended abstract (approximately 3 standard pages) - can be defined here or above
+\extendedabstract{Moderní mikrokontroléry dosáhly výkonu, který před několika lety ještě nebyl dostupný ani ve středních embedded systémech. To otevřelo novou třídu aplikací: místo odesílání senzorových dat do cloudu a čekání na odpověď je nyní možné provést celou klasifikaci strojovým učením přímo na čipu v reálném čase. Výhody jsou praktické — nižší latence odezvy, nezávislost na síti, menší spotřeba energie při přenosu dat a zachování soukromí uživatele. Nasazení strojového učení na mikrokontrolérech přesto zůstává technicky náročnou úlohou, která vyžaduje pečlivá rozhodnutí ohledně architektury modelu, kvantizace a optimalizace pro konkrétní hardware.
+
+V rámci této práce byl od základu vybudován celý řetězec strojového učení pro roz\-poz\-n\'{a}\-v\'{a}\-n\'{i} gest zápěstí na mikrokontroléru NXP~i.MX~RT1050. Senzorová data byla sbírána pomocí inerciálního senzoru MPU-6050 od dvou subjektů v opakovaných sezeních. Data byla použita pro trénink kompaktní jednorozměrné konvoluční neuronové sítě v Keras. Model byl kvantizován a nasazen jako firmware pod FreeRTOS přes TFLite Micro. Paralelně bylo implementováno a nasazeno pět klasických klasifikátorů — logistická regrese, SVM, rozhodovací strom, $k$-NN a náhodný les — pracujících na statistickém vektoru příznaků a exportovaných jako C hlavičkové soubory. Všechny modely byly vyhodnoceny z hlediska přesnosti, latence inference a paměťových nároků.
+
+Základní CNN dosáhla na dvousubjektovém datasetu gest přesnosti 94{,}3\,\%; prodloužení vstupního okna ze 100 na 200 vzorků ji zvýšilo na 96{,}2\,\%. Plná int8 kvantizace přinesla výrazné úspory bez znatelné ztráty kvality: spotřeba SRAM klesla o 75\,\% — z 151\,860 na 38\,406 bajtů — zatímco přesnost se změnila o pouhé $+0{,}4$\,p.b. Průměrná latence int8 modelu na desce je 13\,199\,$\mu$s, maximální pak 23\,737\,$\mu$s, obě hodnoty jsou výrazně pod hranicí 1\,000\,ms danou intervalem mezi okny. Model tedy běží v reálném čase s dostatečnou rezervou. Mezi klasickými modely dosáhl rozhodovací strom nejrychlejší inference (221\,$\mu$s) při využití méně než 10\,KB flash paměti. Logistická regrese na vlastním datasetu dosáhla přesnosti 96{,}1\,\% — shodně s nejlepší CNN — což ukazuje, že neuronová síť nepřináší výhodu automaticky, ale jen tehdy, když je k dispozici dostatečné množství a rozmanitost trénovacích dat. Testování přenositelnosti modelu na subjektu nezahrnutém do tréninku dosáhlo přesnosti pouze 34{,}7\,\%, což identifikuje omezený počet trénovacích subjektů jako hlavní omezení systému.
+
+Před aplikací pipeline na vlastní datovou sadu byla provedena studie hyperparametrů na veřejném benchmarku UCI Human Activity Recognition s 30 subjekty, která sloužila jako validační krok ověřující správnost implementace. Studie odhalila prakticky relevantní pozorování: optimální hodnoty rychlosti učení, míry dropoutu a dávkové normalizace se mezi oběma datovými sadami výrazně liší a u několika parametrů se směr efektu obrátí.}
+% Začít rozšířený abstrakt na liché stránce? / Should extended abstract start on the odd page?
+%\extabstractodd{true}
+
+% nastavení délky bloku s titulkem pro úpravu zalomení řádku - lze definovat zde nebo výše / setting the length of a block with a thesis title for adjusting a line break - can be defined here or above
+%\titlelength{14.5cm}
+% nastavení délky bloku s druhým titulkem pro úpravu zalomení řádku - lze definovat zde nebo výše / setting the length of a block with a second thesis title for adjusting a line break - can be defined here or above
+%\sectitlelength{14.5cm}
+% nastavení délky bloku s titulkem nad prohlášením pro úpravu zalomení řádku - lze definovat zde nebo výše / setting the length of a block with a thesis title above declaration for adjusting a line break - can be defined here or above
+%\dectitlelength{14.5cm}
+
+% řeší první/poslední řádek odstavce na předchozí/následující stránce
+% solves first/last row of the paragraph on the previous/next page
+\clubpenalty=10000
+\widowpenalty=10000
+
+% checklist
+\newlist{checklist}{itemize}{1}
+\setlist[checklist]{label=$\square$}
+
+% Kompilace po částech (rychlejší, ale v náhledu nemusí být vše aktuální)
+% Compilation piecewise (faster, but not all parts in preview will be up-to-date)
+% Další informace viz / For more information see https://www.overleaf.com/learn/latex/Multi-file_LaTeX_projects
+% \usepackage{subfiles}
+
+% Nechcete-li, aby se u oboustranného tisku roztahovaly mezery pro zaplnění stránky, odkomentujte následující řádek / If you do not want enlarged spacing for filling of the pages in case of duplex printing, uncomment the following line
+% \raggedbottom
+
+\begin{document}
+  % Vysazeni titulnich stran / Typesetting of the title pages
+  % ----------------------------------------------
+  \maketitle
+  % Obsah
+  % ----------------------------------------------
+  \setlength{\parskip}{0pt}
+
+  {\hypersetup{hidelinks}\tableofcontents}
+  
+  % Seznam obrazku a tabulek (pokud prace obsahuje velke mnozstvi obrazku, tak se to hodi)
+  % List of figures and list of tables (if the thesis contains a lot of pictures, it is good)
+  \ifczech
+    \renewcommand\listfigurename{Seznam obrázků}
+  \fi
+  \ifslovak
+    \renewcommand\listfigurename{Zoznam obrázkov}
+  \fi
+  {\hypersetup{hidelinks}\listoffigures}
+  
+  \ifczech
+    \renewcommand\listtablename{Seznam tabulek}
+  \fi
+  \ifslovak
+    \renewcommand\listtablename{Zoznam tabuliek}
+  \fi
+  {\hypersetup{hidelinks}\listoftables}
+
+  % Seznam zkratek / List of abbreviations
+  %\ifczech
+  %  \renewcommand*\glossaryname{Seznam zkratek}%
+  %  \renewcommand*\entryname{Zkratka}
+  %  \renewcommand*\descriptionname{Význam}
+  %\fi
+  %\ifslovak
+  %  \renewcommand*\glossaryname{Zoznam skratiek}%
+  %  \renewcommand*\entryname{Skratka}
+  %  \renewcommand*\descriptionname{Význam}
+  %\fi
+  %\ifenglish
+  %  \renewcommand*\glossaryname{List of abbreviations}%
+  %  \renewcommand*\entryname{Abbreviation}
+  %  \renewcommand*\descriptionname{Meaning}
+  %\fi
+  % Definice zkratek - z textu se odkazují např. \Gls{TF–IDF}
+  % Definition of abbreviations - referred from the text e.g. \Gls{TF–IDF}
+  %\newglossaryentry{TF–IDF}
+  %{
+  %  name={TF–IDF},
+  %  description={Term Frequency-Inverse Document Frequency}
+  %}
+  % 
+  %\setglossarystyle{superragged}
+  %\printglossaries
+
+
+  \ifODSAZ
+    \setlength{\parskip}{0.5\bigskipamount}
+  \else
+    \setlength{\parskip}{0pt}
+  \fi
+
+  % vynechani stranky v oboustrannem rezimu
+  % Skip the page in the two-sided mode
+  \iftwoside
+    \cleardoublepage
+  \fi
+
+  % Text prace / Thesis text
+  % ----------------------------------------------
+  \ifenglish
+    \input{projekt-01-kapitoly-chapters-en}
+  \else
+    \input{projekt-01-kapitoly-chapters}
+  \fi
+  
+  % Kompilace po částech (viz výše, nutno odkomentovat a zakomentovat input výše)
+  % Compilation piecewise (see above, it is necessary to uncomment it and comment out input above)
+  %\subfile{chapters/projekt-01-uvod-introduction}
+  % ...
+  %\subfile{chapters/projekt-05-zaver-conclusion}
+
+  % Pouzita literatura / Bibliography
+  % ----------------------------------------------
+\ifslovak
+  \makeatletter
+  \def\@openbib@code{\addcontentsline{toc}{chapter}{Literatúra}}
+  \makeatother
+  \bibliographystyle{bib-styles/Pysny/skplain}
+\else
+  \ifczech
+    \makeatletter
+    \def\@openbib@code{\addcontentsline{toc}{chapter}{Literatura}}
+    \makeatother
+    \bibliographystyle{bib-styles/Pysny/czplain}
+  \else 
+    \makeatletter
+    \def\@openbib@code{\addcontentsline{toc}{chapter}{Bibliography}}
+    \makeatother
+    \bibliographystyle{bib-styles/Pysny/enplain}
+  %  \bibliographystyle{alpha}
+  \fi
+\fi
+  \begin{flushleft}
+  \bibliography{projekt-20-literatura-bibliography}
+  \end{flushleft}
+
+  % vynechani stranky v oboustrannem rezimu
+  % Skip the page in the two-sided mode
+  \iftwoside
+    \cleardoublepage
+  \fi
+
+  % Prilohy / Appendices
+  % ---------------------------------------------
+  \appendix
+\ifczech
+  \renewcommand{\appendixpagename}{Přílohy}
+  \renewcommand{\appendixtocname}{Přílohy}
+  \renewcommand{\appendixname}{Příloha}
+\fi
+\ifslovak
+  \renewcommand{\appendixpagename}{Prílohy}
+  \renewcommand{\appendixtocname}{Prílohy}
+  \renewcommand{\appendixname}{Príloha}
+\fi
+%  \appendixpage
+
+% vynechani stranky v oboustrannem rezimu
+% Skip the page in the two-sided mode
+%\iftwoside
+%  \cleardoublepage
+%\fi
+  
+\ifslovak
+%  \section*{Zoznam príloh}
+%  \addcontentsline{toc}{section}{Zoznam príloh}
+\else
+  \ifczech
+%    \section*{Seznam příloh}
+%    \addcontentsline{toc}{section}{Seznam příloh}
+  \else
+%    \section*{List of Appendices}
+%    \addcontentsline{toc}{section}{List of Appendices}
+  \fi
+\fi
+  \startcontents[chapters]
+  \setlength{\parskip}{0pt} 
+  % seznam příloh / list of appendices
+  % \printcontents[chapters]{l}{0}{\setcounter{tocdepth}{2}}
+  
+  \ifODSAZ
+    \setlength{\parskip}{0.5\bigskipamount}
+  \else
+    \setlength{\parskip}{0pt}
+  \fi
+  
+  % vynechani stranky v oboustrannem rezimu
+  \iftwoside
+    \cleardoublepage
+  \fi
+  
+  % Přílohy / Appendices
+  % \ifenglish
+  %   \input{projekt-30-prilohy-appendices-en}
+  % \else
+  %   \input{projekt-30-prilohy-appendices}
+  % \fi
+  
+  % Kompilace po částech (viz výše, nutno odkomentovat)
+  % Compilation piecewise (see above, it is necessary to uncomment it)
+  %\subfile{projekt-30-prilohy-appendices}
+  
+\end{document}

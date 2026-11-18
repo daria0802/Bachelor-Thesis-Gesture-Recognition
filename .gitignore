@@ -1,0 +1,33 @@
+# MCUXpresso build output
+Debug/
+Release/
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Generated data
+model_training/data/hands_labeled/
+
+# Public dataset (download separately, see README)
+model_training/data/UCI HAR Dataset/
+
+# LaTeX build artifacts
+documentation/*.aux
+documentation/*.log
+documentation/*.out
+documentation/*.toc
+documentation/*.bbl
+documentation/*.blg
+documentation/*.synctex.gz
+documentation/*.fls
+documentation/*.fdb_latexmk
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
